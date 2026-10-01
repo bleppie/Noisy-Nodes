@@ -188,3 +188,35 @@ void SimplexNoise3DGradient_float(float3 input, out float Out)
 }
 
 // END JIMMY'S MODIFICATIONS
+
+///<funchints>
+///    <sg:ProviderKey>Noisy-Nodes.SimplexNoise3D</sg:ProviderKey>
+///    <sg:DisplayName>Simplex Noise 3D</sg:DisplayName>
+///    <sg:SearchName>Simplex Noise 3D</sg:SearchName>
+///    <sg:SearchCategory>Noise</sg:SearchCategory>
+///</funchints>
+///<paramhints name="Frequency">
+///     <sg:Default>1, 1, 1</sg:Default>
+///</paramhints>
+UNITY_EXPORT_REFLECTION
+float SimplexNoise3D(float3 In, float3 Frequency)
+{
+  return snoise(In * Frequency) * 0.5f + 0.5f;
+}
+
+///<funchints>
+///    <sg:ProviderKey>Noisy-Nodes.SimplexNoise3DGradient</sg:ProviderKey>
+///    <sg:DisplayName>Simplex Noise 3D Gradient</sg:DisplayName>
+///    <sg:SearchName>Simplex Noise 3D Gradient</sg:SearchName>
+///    <sg:SearchCategory>Noise</sg:SearchCategory>
+///</funchints>
+///<paramhints name="Frequency">
+///     <sg:Default>1, 1, 1</sg:Default>
+///</paramhints>
+UNITY_EXPORT_REFLECTION
+float SimplexNoise3DGradient(float3 In, float3 Frequency, out float3 Gradient)
+{
+  float3 value = snoise_grad(In * Frequency);
+  Gradient = value.xyz;
+  return value.w * 0.5f + 0.5f;
+}

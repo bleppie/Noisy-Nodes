@@ -170,14 +170,43 @@ float pnoise(float3 P, float3 rep)
 
 // BEGIN JIMMY'S MODIFICATIONS
 
-void PerlinNoise3D_float(float3 input, out float Out)
-{
+void PerlinNoise3D_float(float3 input, out float Out) {
     Out = cnoise(input);
 }
 
-void PerlinNoise3DPeriodic_float(float3 input, float3 period, out float Out)
-{
+void PerlinNoise3DPeriodic_float(float3 input, float3 period, out float Out) {
     Out = pnoise(input, period);
 }
 
 // END JIMMY'S MODIFICATIONS
+
+///<funchints>
+///    <sg:ProviderKey>Noisy-Nodes.PerlinNoise3D</sg:ProviderKey>
+///    <sg:DisplayName>Perlin Noise 3D</sg:DisplayName>
+///    <sg:SearchName>Perlin Noise 3D</sg:SearchName>
+///    <sg:SearchCategory>Noise</sg:SearchCategory>
+///</funchints>
+///<paramhints name="Frequency">
+///     <sg:Default>1, 1, 1</sg:Default>
+///</paramhints>
+UNITY_EXPORT_REFLECTION
+float PerlinNoise3D(float3 In, float3 Frequency) {
+  return cnoise(In * Frequency) * 0.5f + 0.5f;
+}
+
+///<funchints>
+///    <sg:ProviderKey>Noisy-Nodes.PerlinNoise3DPeriodic</sg:ProviderKey>
+///    <sg:DisplayName>Perlin Noise 3D Periodic</sg:DisplayName>
+///    <sg:SearchName>Perlin Noise 3D Periodic</sg:SearchName>
+///    <sg:SearchCategory>Noise</sg:SearchCategory>
+///</funchints>
+///<paramhints name="Frequency">
+///     <sg:Default>1, 1, 1</sg:Default>
+///</paramhints>
+///<paramhints name="Period">
+///     <sg:Default>5, 5, 5</sg:Default>
+///</paramhints>
+UNITY_EXPORT_REFLECTION
+float PerlinNoise3DPeriodic(float3 In, float3 Frequency, float3 Period) {
+  return pnoise(In * Frequency, Period);
+}

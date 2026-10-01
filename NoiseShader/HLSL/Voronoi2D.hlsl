@@ -1,23 +1,25 @@
+#include "ShaderApiReflectionSupport.hlsl"
+
 inline float2 voronoi_noise_randomVector (float2 UV, float offset){
     float2x2 m = float2x2(15.27, 47.63, 99.41, 89.98);
     UV = frac(sin(mul(UV, m)) * 46839.32);
     return float2(sin(UV.y*+offset)*0.5+0.5, cos(UV.x*offset)*0.5+0.5);
 }
 
-void VoronoiPrecise2D_float(float2 UV, float AngleOffset, float CellDensity, out float Out, out float Cells) {
+float vnoise_precise(float2 UV, float AngleOffset, float CellDensity, out float Cells) {
     float2 g = floor(UV * CellDensity);
     float2 f = frac(UV * CellDensity);
     float2 res = float2(8.0, 8.0);
     float2 ml = float2(0,0);
     float2 mv = float2(0,0);
- 
+
     for(int y=-1; y<=1; y++){
         for(int x=-1; x<=1; x++){
             float2 lattice = float2(x, y);
             float2 offset = voronoi_noise_randomVector(g + lattice, AngleOffset);
             float2 v = lattice + offset - f;
             float d = dot(v, v);
- 
+
             if(d < res.x){
                 res.x = d;
                 res.y = offset.x;
@@ -26,16 +28,16 @@ void VoronoiPrecise2D_float(float2 UV, float AngleOffset, float CellDensity, out
             }
         }
     }
- 
+
     Cells = res.y;
- 
+
     res = float2(8.0, 8.0);
     for(int y1=-2; y1<=2; y1++){
         for(int x1=-2; x1<=2; x1++){
             float2 lattice = ml + float2(x1, y1);
             float2 offset = voronoi_noise_randomVector(g + lattice, AngleOffset);
             float2 v = lattice + offset - f;
- 
+
             float2 cellDifference = abs(ml - lattice);
             if (cellDifference.x + cellDifference.y > 0.1){
                 float d = dot(0.5*(mv+v), normalize(v-mv));
@@ -43,22 +45,23 @@ void VoronoiPrecise2D_float(float2 UV, float AngleOffset, float CellDensity, out
             }
         }
     }
- 
-    Out = res.x;
+
+    return res.x;
 }
 
-void Voronoi2D_float(float2 UV, float AngleOffset, float CellDensity, out float Out, out float Cells) {
+
+float vnoise(float2 UV, float AngleOffset, float CellDensity, out float Cells) {
     float2 g = floor(UV * CellDensity);
     float2 f = frac(UV * CellDensity);
     float3 res = float3(8.0, 8.0, 8.0);
- 
+
     for(int y=-1; y<=1; y++){
         for(int x=-1; x<=1; x++){
             float2 lattice = float2(x, y);
             float2 offset = voronoi_noise_randomVector(g + lattice, AngleOffset);
             float2 v = lattice + offset - f;
             float d = dot(v, v);
-             
+
             if(d < res.x){
                 res.y = res.x;
                 res.x = d;
@@ -68,7 +71,50 @@ void Voronoi2D_float(float2 UV, float AngleOffset, float CellDensity, out float 
             }
         }
     }
- 
-    Out = res.x;
+
     Cells = res.z;
+    return res.x;
+}
+
+void VoronoiPrecise2D_float(float2 UV, float AngleOffset, float CellDensity, out float Out, out float Cells) {
+  Out = vnoise_precise(UV, AngleOffset, CellDensity, Cells);
+}
+
+void Voronoi2D_float(float2 UV, float AngleOffset, float CellDensity, out float Out, out float Cells) {
+  Out = vnoise(UV, AngleOffset, CellDensity, Cells);
+}
+
+///<funchints>
+///    <sg:ProviderKey>Noisy-Nodes.VoronoiNoise2D</sg:ProviderKey>
+///    <sg:DisplayName>Voronoi Noise 2D</sg:DisplayName>
+///    <sg:SearchName>Voronoi Noise 2D</sg:SearchName>
+///    <sg:SearchCategory>Noise</sg:SearchCategory>
+///</funchints>
+///<paramhints name="Frequency">
+///     <sg:Default>1, 1</sg:Default>
+///</paramhints>
+///<paramhints name="CellDensity">
+///     <sg:Default>10</sg:Default>
+///</paramhints>
+UNITY_EXPORT_REFLECTION
+float VoronoiNoise2D(float2 In, float2 Frequency, float AngleOffset, float CellDensity, out float Cells) {
+  return vnoise(In * Frequency, AngleOffset, CellDensity, Cells);
+}
+
+///<funchints>
+///    <sg:ProviderKey>Noisy-Nodes.VoronoiNoise2DPrecise</sg:ProviderKey>
+///    <sg:DisplayName>Voronoi Noise 2D Precise</sg:DisplayName>
+///    <sg:SearchName>Voronoi Noise 2D Precise</sg:SearchName>
+///    <sg:SearchCategory>Noise</sg:SearchCategory>
+///</funchints>
+///<paramhints name="Frequency">
+///     <sg:Default>1, 1</sg:Default>
+///</paramhints>
+///<paramhints name="CellDensity">
+///     <sg:Default>10</sg:Default>
+///</paramhints>
+UNITY_EXPORT_REFLECTION
+float VoronoiNoise2DPrecise(float2 In, float2 Frequency,
+                            float AngleOffset, float CellDensity, out float Cells) {
+  return vnoise_precise(In * Frequency, AngleOffset, CellDensity, Cells);
 }

@@ -24,7 +24,6 @@
 //
 
 #include "NoiseUtils.hlsl" 
-#include "ShaderApiReflectionSupport.hlsl"
 
 // Classic Perlin noise
 float cnoise(float2 P)
@@ -105,51 +104,4 @@ float pnoise(float2 P, float2 rep)
   float2 n_x = lerp(float2(n00, n01), float2(n10, n11), fade_xy.x);
   float n_xy = lerp(n_x.x, n_x.y, fade_xy.y);
   return 2.3 * n_xy;
-}
-
-
-
-// BEGIN JIMMY'S MODIFICATIONS
-
-void PerlinNoise2D_float(float2 input, out float Out)
-{
-    Out = cnoise(input);
-}
-
-void PerlinNoise2DPeriodic_float(float2 input, float2 period, out float Out)
-{
-    Out = pnoise(input, period);
-}
-
-// END JIMMY'S MODIFICATIONS
-
-///<funchints>
-///    <sg:ProviderKey>Noisy-Nodes.PerlinNoise2D</sg:ProviderKey>
-///    <sg:DisplayName>Perlin Noise 2D</sg:DisplayName>
-///    <sg:SearchName>Perlin Noise 2D</sg:SearchName>
-///    <sg:SearchCategory>Noise</sg:SearchCategory>
-///</funchints>
-///<paramhints name="Frequency">
-///     <sg:Default>1, 1</sg:Default>
-///</paramhints>
-UNITY_EXPORT_REFLECTION
-float PerlinNoise2D(float2 In, float2 Frequency) {
-  return cnoise(In * Frequency) * 0.5f + 0.5f;
-}
-
-///<funchints>
-///    <sg:ProviderKey>Noisy-Nodes.PerlinNoise2DPeriodic</sg:ProviderKey>
-///    <sg:DisplayName>Perlin Noise 2D Periodic</sg:DisplayName>
-///    <sg:SearchName>Perlin Noise 2D Periodic</sg:SearchName>
-///    <sg:SearchCategory>Noise</sg:SearchCategory>
-///</funchints>
-///<paramhints name="Frequency">
-///     <sg:Default>1, 1</sg:Default>
-///</paramhints>
-///<paramhints name="Period">
-///     <sg:Default>5, 5</sg:Default>
-///</paramhints>
-UNITY_EXPORT_REFLECTION
-float PerlinNoise2DPeriodic(float2 In, float2 Frequency, float2 Period) {
-  return pnoise(In * Frequency, Period);
 }

@@ -20,7 +20,6 @@
 //
 
 #include "NoiseUtils.hlsl" 
-#include "ShaderApiReflectionSupport.hlsl"
 
 float snoise(float2 v)
 {
@@ -121,52 +120,4 @@ float3 snoise_grad(float2 v)
       -6.0 * m3.z * x2 * dot(x2, g2) + m4.z * g2;
     float3 px = float3(dot(x0, g0), dot(x1, g1), dot(x2, g2));
     return 130.0 * float3(grad, dot(m4, px));
-}
-
-
-
-// BEGIN JIMMY'S MODIFICATIONS
-
-void SimplexNoise2D_float(float2 input, out float Out)
-{
-    Out = snoise(input);
-}
-
-void SimplexNoise2DGradient_float(float2 input, out float Out)
-{
-    Out = snoise_grad(input);
-}
-
-// END JIMMY'S MODIFICATIONS
-
-///<funchints>
-///    <sg:ProviderKey>Noisy-Nodes.SimplexNoise2D</sg:ProviderKey>
-///    <sg:DisplayName>Simplex Noise 2D</sg:DisplayName>
-///    <sg:SearchName>Simplex Noise 2D</sg:SearchName>
-///    <sg:SearchCategory>Noise</sg:SearchCategory>
-///</funchints>
-///<paramhints name="Frequency">
-///     <sg:Default>1, 1</sg:Default>
-///</paramhints>
-UNITY_EXPORT_REFLECTION
-float SimplexNoise2D(float2 In, float2 Frequency)
-{
-  return snoise(In * Frequency) * 0.5f + 0.5f;
-}
-
-///<funchints>
-///    <sg:ProviderKey>Noisy-Nodes.SimplexNoise2DGradient</sg:ProviderKey>
-///    <sg:DisplayName>Simplex Noise 2D Gradient</sg:DisplayName>
-///    <sg:SearchName>Simplex Noise 2D Gradient</sg:SearchName>
-///    <sg:SearchCategory>Noise</sg:SearchCategory>
-///</funchints>
-///<paramhints name="Frequency">
-///     <sg:Default>1, 1</sg:Default>
-///</paramhints>
-UNITY_EXPORT_REFLECTION
-float SimplexNoise2DGradient(float2 In, float2 Frequency, out float2 Gradient)
-{
-  float3 value = snoise_grad(In * Frequency);
-  Gradient = value.xy;
-  return value.z * 0.5f + 0.5f;
 }

@@ -20,10 +20,13 @@
 //               https://github.com/ashima/webgl-noise
 //
 
-#include "NoiseUtils.hlsl" 
+#ifndef _NOISY_NODES_SIMPLEX_NOISE3D
+#define _NOISY_NODES_SIMPLEX_NOISE3D
 
-float snoise(float3 v)
-{
+#include "NoiseUtils.hlsl"
+
+float snoise(float3 v) {
+  
     const float2 C = float2(1.0 / 6.0, 1.0 / 3.0);
 
     // First corner
@@ -172,3 +175,5 @@ float4 snoise_grad(float3 v)
     float4 px = float4(dot(x0, g0), dot(x1, g1), dot(x2, g2), dot(x3, g3));
     return 42.0 * float4(grad, dot(m4, px));
 }
+
+#endif

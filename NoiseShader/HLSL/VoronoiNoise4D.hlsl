@@ -1,3 +1,6 @@
+#ifndef _NOISY_NODES_VORONOI_NOISE4D
+#define _NOISY_NODES_VORONOI_NOISE4D
+
 inline float4 vnoise_random (float4 UV, float offset){
     float4x4 m = float4x4(15.27, 47.63, 99.41, 89.98, 95.07, 38.39, 33.83, 51.06,
                           60.77, 51.15, 92.33, 97.74, 59.93, 42.33, 60.13, 35.72);
@@ -87,3 +90,5 @@ float vnoise_precise(float4 UV, float AngleOffset, float CellDensity, out float 
 
     return res.x;
 }
+
+#endif

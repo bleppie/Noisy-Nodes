@@ -23,11 +23,14 @@
 // https://github.com/ashima/webgl-noise
 //
 
-#include "NoiseUtils.hlsl" 
+#ifndef _NOISY_NODES_CLASSIC_NOISE3D
+#define _NOISY_NODES_CLASSIC_NOISE3D
+
+#include "NoiseUtils.hlsl"
 
 // Classic Perlin noise
-float cnoise(float3 P)
-{
+float cnoise(float3 P) {
+
   float3 Pi0 = floor(P); // Integer part for indexing
   float3 Pi1 = Pi0 + (float3)1.0; // Integer part + 1
   Pi0 = mod289(Pi0);
@@ -97,8 +100,8 @@ float cnoise(float3 P)
 }
 
 // Classic Perlin noise, periodic variant
-float pnoise(float3 P, float3 rep)
-{
+float pnoise(float3 P, float3 rep) {
+  
   float3 Pi0 = mod(floor(P), rep); // Integer part, modulo period
   float3 Pi1 = mod(Pi0 + (float3)1.0, rep); // Integer part + 1, mod period
   Pi0 = mod289(Pi0);
@@ -165,3 +168,5 @@ float pnoise(float3 P, float3 rep)
   float n_xyz = lerp(n_yz.x, n_yz.y, fade_xyz.x);
   return 2.2 * n_xyz;
 }
+
+#endif

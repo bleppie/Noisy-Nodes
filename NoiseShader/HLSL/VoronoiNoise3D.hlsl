@@ -1,5 +1,5 @@
-#ifndef _NOISY_NODES_VORONOI_NOISE2D
-#define _NOISY_NODES_VORONOI_NOISE2D
+#ifndef _NOISY_NODES_VORONOI_NOISE3D
+#define _NOISY_NODES_VORONOI_NOISE3D
 
 inline float3 vnoise_random (float3 UV, float offset) {
     float3x3 m = float3x3(15.27, 47.63, 99.41, 89.98, 95.07, 38.39, 33.83, 51.06, 60.77);
